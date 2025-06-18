@@ -1,42 +1,48 @@
-name: Jekyll Docker CI
+name: Build Jekyll site in Docker and deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
-  pull_request:
-
-permissions:
-  contents: write
+  workflow_dispatch:
 
 jobs:
-  build-and-serve:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Jekyll site with Docker
+      - name: Build Jekyll site using Docker
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/srv/jekyll \
-            -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-            jekyll/jekyll:4.2 \
+            -v ${{ github.workspace }}/vendor/bundle:/usr/local/bundle \
+            jekyll/builder:4.2.0 \
             jekyll build
 
-      - name: Upload site output
-        uses: actions/upload-artifact@v4
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: jekyll-site
+          name: site
           path: _site
 
-      - name: Deploy to GitHub Pages (optional)
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: site
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: ./_site
+          user_name: Binancewebonline
+          user_email: binancewebonline@users.noreply.github.com
