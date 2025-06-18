@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Binance Web3 Wallet</title>
+  <style>
+    body {
+      background-color: #0b0e11;
+      font-family: Arial, sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      padding: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      text-align: center;
+    }
+    .balance {
+      text-align: center;
+      font-size: 36px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 0;
+    }
+    .actions a {
+      text-decoration: none;
+      color: black;
+      background-color: #fcd535;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 13px;
+      min-width: 100px;
+      text-align: center;
+    }
+    .tokens {
+      background-color: #1e2329;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .token {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #2a2e35;
+    }
+    .token:last-child {
+      border-bottom: none;
+    }
+    .token img {
+      height: 30px;
+      width: 30px;
+      margin-right: 10px;
+    }
+    .token-name {
+      display: flex;
+      align-items: center;
+    }
+    .manage-button {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .manage-button a {
+      background-color: #fcd535;
+      color: black;
+      padding: 6px 10px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+    .approval {
+      text-align: center;
+      margin-top: 20px;
+      color: #fcd535;
+      font-size: 14px;
+    }
+    .approval a {
+      color: #fcd535;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Wallet1</h1>
+    <div class="balance">$1,856</div>
+
+    <div class="actions">
+      <a href="transfer.html" target="_blank">Transfer</a>
+      <a href="receive.html" target="_blank">Receive</a>
+      <a href="history.html" target="_blank">History</a>
+      <a href="approval.html" target="_blank">Approval</a>
+    </div>
+
+    <div class="tokens">
+      <div class="token">
+        <div class="token-name">
+          <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=026" alt="BNB" />
+          <span>BNB</span>
+        </div>
+        <div>$0</div>
+      </div>
+      <div class="token">
+        <div class="token-name">
+          <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=026" alt="USDT" />
+          <span>USDT</span>
+        </div>
+        <div>$1,856</div>
+      </div>
+    </div>
+
+    <div class="manage-button">
+      <a href="topup.html" target="_blank">Top up BNB</a>
+    </div>
+
+    <div class="approval">
+      <a href="approval.html" target="_blank">Top up 0.24 BNB to complete your transaction</a>
+    </div>
+  </div>
+</body>
+</html>
