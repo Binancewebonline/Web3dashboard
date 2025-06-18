@@ -1,0 +1,35 @@
+
+name: SLSA Level 3 Publish
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Build and Attest Static Site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: No build step (static HTML project)
+        run: echo "No build needed for static HTML site"
+
+      - name: Upload artifacts for attestation
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-html
+          path: .
+
+      - name: Generate SLSA provenance
+        uses: slsa-framework/slsa-github-generator/generic@v1.8.0
+        with:
+          build-artifact-path: .
+          upload-assets: true
