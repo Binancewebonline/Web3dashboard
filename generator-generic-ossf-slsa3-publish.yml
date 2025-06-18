@@ -1,5 +1,4 @@
-
-name: SLSA Level 3 Publish
+name: SLSA Level 3 Generic Publish
 
 on:
   push:
@@ -7,29 +6,60 @@ on:
       - 'v*.*.*'
 
 permissions:
+  contents: write
   id-token: write
-  contents: read
+  packages: write
 
 jobs:
-  build:
-    name: Build and Attest Static Site
+  slsa3-publish:
+    name: SLSA Level 3 Publish Pipeline
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-      - name: No build step (static HTML project)
-        run: echo "No build needed for static HTML site"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-      - name: Upload artifacts for attestation
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Generate SLSA Provenance
+        uses: slsa-framework/slsa-github-generator/actions/generic/slsa3@v1.7.0
+        with:
+          artifact_path: ./dist
+          upload_assets: true
+          output_path: ./slsa-provenance
+
+      - name: Upload Built Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: site-html
-          path: .
+          name: build-artifacts
+          path: ./dist
 
-      - name: Generate SLSA provenance
-        uses: slsa-framework/slsa-github-generator/generic@v1.8.0
+      - name: Upload Provenance Files
+        uses: actions/upload-artifact@v4
         with:
-          build-artifact-path: .
-          upload-assets: true
+          name: slsa-provenance
+          path: ./slsa-provenance
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./dist/**
+            ./slsa-provenance/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
