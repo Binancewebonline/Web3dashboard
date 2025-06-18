@@ -1,0 +1,42 @@
+name: Jekyll Docker CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-serve:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Jekyll site with Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/srv/jekyll \
+            -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
+            jekyll/jekyll:4.2 \
+            jekyll build
+
+      - name: Upload site output
+        uses: actions/upload-artifact@v4
+        with:
+          name: jekyll-site
+          path: _site
+
+      - name: Deploy to GitHub Pages (optional)
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
